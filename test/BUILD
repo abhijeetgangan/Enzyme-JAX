@@ -142,6 +142,25 @@ py_test(
 )
 
 py_test(
+    name = "jaxmd_derivatives",
+    timeout = "eternal",
+    srcs = [
+        "jaxmd_derivatives.py",
+        "test_utils.py",
+        "xprof_utils.py",
+    ],
+    imports = ["."],
+    tags = ["exclusive"],
+    deps = TEST_DEPS + select({
+        "@bazel_tools//src/conditions:linux_x86_64": [
+            "@pypi_jax_md//:pkg",
+            "@pypi_jraph//:pkg",
+        ],
+        "//conditions:default": [],
+    }),
+)
+
+py_test(
     name = "neuralgcm_test",
     timeout = "eternal",
     srcs = [
@@ -193,6 +212,7 @@ test_suite(
     tests = [
         ":bench_vs_xla",
         ":jaxmd",
+        ":jaxmd_derivatives",
         ":llama",
         ":neuralgcm_test",
         ":test",
